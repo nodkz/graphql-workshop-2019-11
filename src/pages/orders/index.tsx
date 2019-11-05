@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { withApollo } from 'app/lib/apollo.tsx';
+import { useApolloClient } from '@apollo/react-hooks';
 
 function Home() {
-  return <div>Order list mock page</div>;
+  const client = useApolloClient();
+  return <div>Order list mock page!!</div>;
 }
 
-export default Home;
+export default withApollo(Home);

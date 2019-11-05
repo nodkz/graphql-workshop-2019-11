@@ -7,12 +7,17 @@ require('dotenv').config({
 require('module-alias').addAlias('app', resolve(__dirname, dev ? './src' : './'));
 const express = require('express');
 const next = require('next');
+global.fetch = require('isomorphic-unfetch');
 
 const port = parseInt(process.env.PORT, 10) || 4000;
 const cfg = {
   dev,
   conf: {
     dir: dev ? './src' : './',
+    publicRuntimeConfig: {
+      REACT_APP_GRAPHQL_URI: process.env.REACT_APP_GRAPHQL_URI,
+      version: process.env.APP_REVISION,
+    },
     ...(dev ? require('./next.config.js') : null),
   },
 };
