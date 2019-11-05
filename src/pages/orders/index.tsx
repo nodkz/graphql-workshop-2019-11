@@ -8,9 +8,21 @@ import {
   OrdersTestQueryVariables as V,
 } from './__generated__/OrdersTestQuery';
 import gql from 'graphql-tag';
+import { useRouter } from 'next/router';
 
 function OrderPagination() {
-  const [perPage, setPerPage] = useState(10);
+  const router = useRouter();
+
+  const page = typeof router.query.page === 'string' ? parseInt(router.query.page, 10) : 1;
+  const setPage = (page: number) => {
+    router.push({ pathname: router.pathname, query: { ...router.query, page } });
+  };
+
+  const perPage =
+    typeof router.query.perPage === 'string' ? parseInt(router.query.perPage, 10) : 10;
+  const setPerPage = (perPage: number) => {
+    router.push({ pathname: router.pathname, query: { ...router.query, perPage } });
+  };
 
   const { data, loading, error, networkStatus, variables, refetch, client, updateQuery } = useQuery<
     R
@@ -54,20 +66,14 @@ function OrderPagination() {
       }
     `,
     {
-      variables: { page: 1, perPage },
-      // fetchPolicy: 'cache-and-network',
-      // notifyOnNetworkStatusChange: true,
+      variables: { page, perPage },
+      fetchPolicy: 'cache-first',
+      notifyOnNetworkStatusChange: false,
     }
   );
 
   const total =
     (data && data.viewer && data.viewer.orderPagination && data.viewer.orderPagination.count) || 0;
-
-  const [pagination, setPagination] = useState<PaginationConfig>({
-    current: 1,
-    total,
-    showSizeChanger: true,
-  });
 
   const items =
     data && data.viewer && data.viewer.orderPagination && data.viewer.orderPagination.items
@@ -98,13 +104,16 @@ function OrderPagination() {
         ]}
         rowKey={(record) => `${record && record.orderID}`}
         dataSource={items}
-        pagination={pagination}
+        pagination={{
+          current: page,
+          pageSize: perPage,
+          total,
+          showSizeChanger: true,
+        }}
         loading={loading}
         onChange={(pn) => {
-          const pp = pn.pageSize || perPage;
-          setPagination(pn);
-          if (pp !== perPage) setPerPage(pp);
-          refetch({ page: pn.current, perPage: pp });
+          if (pn.pageSize && pn.pageSize !== perPage) setPerPage(pn.pageSize);
+          if (pn.current && pn.current !== page) setPage(pn.current);
         }}
       />
       <div>loading: {JSON.stringify(loading)}</div>
