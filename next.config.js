@@ -12,4 +12,6 @@ const config = withCSS({
   }
 });
 
+config.distDir = './dist';
+
 module.exports = config;

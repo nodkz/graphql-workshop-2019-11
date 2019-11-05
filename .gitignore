@@ -10,6 +10,7 @@
 
 # builds
 /build
+/dist
 /.next
 
 # misc

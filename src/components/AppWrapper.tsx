@@ -21,10 +21,14 @@ export default function AppWrapper({ children }: any) {
           style={{ lineHeight: '64px' }}
         >
           <Menu.Item key="/">
-            <Link href="/">Main</Link>
+            <Link href="/">
+              <a>Main</a>
+            </Link>
           </Menu.Item>
           <Menu.Item key="app">
-            <Link href="/orders">Order List</Link>
+            <Link href="/orders">
+              <a>Main</a>
+            </Link>
           </Menu.Item>
         </Menu>
       </Header>
