@@ -12,6 +12,7 @@
 /build
 /dist
 /.next
+__generated__
 
 # misc
 .DS_Store

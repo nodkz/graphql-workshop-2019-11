@@ -27,7 +27,7 @@ export default function AppWrapper({ children }: any) {
           </Menu.Item>
           <Menu.Item key="app">
             <Link href="/orders">
-              <a>Main</a>
+              <a>Orders</a>
             </Link>
           </Menu.Item>
         </Menu>

@@ -7,6 +7,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import getConfig from 'next/config';
 import fetch from 'isomorphic-unfetch';
+import { ApolloLink, Operation } from 'apollo-link';
 
 const { publicRuntimeConfig = {} } = getConfig() as any;
 const { REACT_APP_GRAPHQL_URI } = publicRuntimeConfig as any;
@@ -118,18 +119,20 @@ function initApolloClient(initialState: any = {}, fetchOptions: any = {}) {
 
 function createApolloClient(initialState = {}, { headers }: any = {}) {
   const linkOptions: HttpLink.Options = {
-    uri: REACT_APP_GRAPHQL_URI,
-    credentials: 'include',
+    uri: ({ operationName }: Operation) => `${REACT_APP_GRAPHQL_URI}?opname=${operationName}`,
+    credentials: 'same-origin',
     fetch,
   };
-
   if (headers) linkOptions.headers = headers;
+  const httpLink = new HttpLink(linkOptions);
 
-  const link = new HttpLink(linkOptions);
+  const link = ApolloLink.from([httpLink]);
+
+  const cache = new InMemoryCache().restore(initialState);
 
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link,
-    cache: new InMemoryCache().restore(initialState),
+    cache,
   });
 }
