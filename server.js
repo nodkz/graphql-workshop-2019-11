@@ -1,5 +1,9 @@
 const dev = process.env.NODE_ENV !== 'production';
 const resolve = require('path').resolve;
+require('dotenv').config({
+  path: resolve(process.cwd(), '.env.dev'),
+  debug: !!process.env.DEBUG,
+});
 require('module-alias').addAlias('app', resolve(__dirname, dev ? './src' : './'));
 const express = require('express');
 const next = require('next');
