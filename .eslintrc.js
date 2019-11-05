@@ -18,7 +18,7 @@ module.exports = {
     'graphql/template-strings': [
       'error',
       {
-        env: 'literal',
+        env: 'apollo',
         tagName: 'gql',
         schemaString: fs.readFileSync(path.resolve(__dirname, './schema.graphql'), 'utf8'),
       },
